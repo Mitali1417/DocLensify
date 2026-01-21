@@ -77,7 +77,22 @@ export default function Auth() {
         Continue with Google
       </button>
 
-      <div style={{ margin: "20px 0", fontSize: "14px" }}>or use email</div>
+      <div
+        style={{
+          margin: "20px 0",
+          fontSize: "14px",
+          backgroundColor: "var(--border)",
+          height: "1px",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <span style={{ backgroundColor: "var(--card)", padding: "0 10px" }}>
+          or
+        </span>
+      </div>
 
       <form onSubmit={handleAuth}>
         {!isLogin && (
