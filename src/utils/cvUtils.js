@@ -117,174 +117,79 @@ const isValidDocument = (contour, imageArea) => {
   return isQuadrilateral;
 };
 
-export const processDocument = async (imageElement) => {
-  return new Promise((resolve, reject) => {
-    try {
-      const cv = window.cv;
-      if (!cv) {
-        reject(new Error("OpenCV not loaded"));
-        return;
+export async function processDocument(sourceElement) {
+  const src = cv.imread(sourceElement);
+  const gray = new cv.Mat();
+  const blurred = new cv.Mat();
+  const edges = new cv.Mat();
+
+  cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+  cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
+  cv.Canny(blurred, edges, 75, 200);
+
+  // Try detecting contours
+  const contours = new cv.MatVector();
+  const hierarchy = new cv.Mat();
+  cv.findContours(
+    edges,
+    contours,
+    hierarchy,
+    cv.RETR_LIST,
+    cv.CHAIN_APPROX_SIMPLE,
+  );
+
+  let didDetect = false;
+  let output = new cv.Mat();
+
+  if (contours.size() > 0) {
+    // Take the largest contour
+    let maxArea = 0;
+    let maxContour = null;
+
+    for (let i = 0; i < contours.size(); i++) {
+      const area = cv.contourArea(contours.get(i));
+      if (area > maxArea) {
+        maxArea = area;
+        maxContour = contours.get(i);
       }
-
-      const src = cv.imread(imageElement);
-      const imageArea = src.rows * src.cols;
-
-      // Create working copies
-      const gray = new cv.Mat();
-      const blurred = new cv.Mat();
-      const edges = new cv.Mat();
-
-      // Preprocessing pipeline
-      cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-      cv.GaussianBlur(gray, blurred, new cv.Size(5, 5), 0);
-
-      // Adaptive thresholding often works better than Canny for documents
-      cv.adaptiveThreshold(
-        blurred,
-        edges,
-        255,
-        cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-        cv.THRESH_BINARY,
-        11,
-        2,
-      );
-
-      // Also try Canny for edge detection
-      const cannyEdges = new cv.Mat();
-      cv.Canny(blurred, cannyEdges, 50, 150);
-
-      // Combine both edge detection methods
-      cv.bitwise_or(edges, cannyEdges, edges);
-
-      // Morphological operations to close gaps
-      const kernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(3, 3));
-      cv.morphologyEx(edges, edges, cv.MORPH_CLOSE, kernel);
-      kernel.delete();
-
-      // Find contours
-      const contours = new cv.MatVector();
-      const hierarchy = new cv.Mat();
-      cv.findContours(
-        edges,
-        contours,
-        hierarchy,
-        cv.RETR_EXTERNAL,
-        cv.CHAIN_APPROX_SIMPLE,
-      );
-
-      let bestContour = null;
-      let maxArea = 0;
-
-      // Find the largest valid quadrilateral
-      for (let i = 0; i < contours.size(); i++) {
-        const cnt = contours.get(i);
-
-        if (isValidDocument(cnt, imageArea)) {
-          const area = cv.contourArea(cnt);
-
-          if (area > maxArea) {
-            const peri = cv.arcLength(cnt, true);
-            const approx = new cv.Mat();
-            cv.approxPolyDP(cnt, approx, 0.02 * peri, true);
-
-            if (approx.rows === 4) {
-              if (bestContour) bestContour.delete();
-              bestContour = approx;
-              maxArea = area;
-            } else {
-              approx.delete();
-            }
-          }
-        }
-        cnt.delete();
-      }
-
-      const canvas = document.createElement("canvas");
-      let result = null;
-      let didDetect = false;
-
-      if (bestContour && maxArea > imageArea * 0.1) {
-        // Extract corner points
-        const points = [];
-        for (let i = 0; i < 4; i++) {
-          points.push({
-            x: bestContour.data32S[i * 2],
-            y: bestContour.data32S[i * 2 + 1],
-          });
-        }
-
-        // Sort points in proper order
-        const sortedPoints = sortPoints(points);
-
-        // Calculate optimal output dimensions
-        const { width, height } = calculateOutputSize(sortedPoints);
-
-        // Apply perspective correction
-        result = applyPerspectiveWarp(src, sortedPoints, width, height);
-
-        if (result) {
-          // Enhance the warped image
-          const enhanced = new cv.Mat();
-
-          // Convert to grayscale for better document readability
-          cv.cvtColor(result, enhanced, cv.COLOR_RGBA2GRAY);
-
-          // Apply adaptive thresholding for crisp text
-          const binary = new cv.Mat();
-          cv.adaptiveThreshold(
-            enhanced,
-            binary,
-            255,
-            cv.ADAPTIVE_THRESH_GAUSSIAN_C,
-            cv.THRESH_BINARY,
-            11,
-            2,
-          );
-
-          // Convert back to RGBA for display
-          cv.cvtColor(binary, enhanced, cv.COLOR_GRAY2RGBA);
-
-          cv.imshow(canvas, enhanced);
-          didDetect = true;
-
-          enhanced.delete();
-          binary.delete();
-          result.delete();
-        }
-
-        bestContour.delete();
-      }
-
-      // return original if no document detected
-      if (!didDetect) {
-        console.warn("No document detected, returning original");
-        cv.imshow(canvas, src);
-      }
-
-      // Convert canvas to blob
-      canvas.toBlob(
-        (blob) => {
-          if (blob) {
-            resolve({ blob, didDetect });
-          } else {
-            reject(new Error("Failed to create blob"));
-          }
-
-          // Cleanup
-          src.delete();
-          gray.delete();
-          blurred.delete();
-          edges.delete();
-          cannyEdges.delete();
-          contours.delete();
-          hierarchy.delete();
-        },
-        "image/jpeg",
-        0.95,
-      );
-    } catch (err) {
-      console.error("Document processing error:", err);
-      reject(err);
     }
-  });
-};
+
+    if (maxContour) {
+      didDetect = true;
+      cv.drawContours(src, contours, -1, new cv.Scalar(0, 255, 0), 2);
+      output = src.clone();
+    }
+  }
+
+  // Fallback: grayscale transform (still a transformation!)
+  if (!didDetect) {
+    cv.resize(gray, gray, new cv.Size(0, 0), 1.2, 1.2);
+    cv.adaptiveThreshold(
+      gray,
+      output,
+      255,
+      cv.ADAPTIVE_THRESH_MEAN_C,
+      cv.THRESH_BINARY,
+      15,
+      5,
+    );
+  }
+
+  const canvas = document.createElement("canvas");
+  cv.imshow(canvas, output);
+
+  const blob = await new Promise((resolve) =>
+    canvas.toBlob(resolve, "image/png"),
+  );
+
+  // Cleanup
+  src.delete();
+  gray.delete();
+  blurred.delete();
+  edges.delete();
+  contours.delete();
+  hierarchy.delete();
+  output.delete();
+
+  return { blob, didDetect };
+}

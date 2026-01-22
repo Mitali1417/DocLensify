@@ -2,26 +2,12 @@ import { useState } from "react";
 import { db, auth } from "../services/firebase/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { processDocument } from "../utils/cvUtils";
-import * as pdfjsLib from "pdfjs-dist";
 import { CgSpinner, CgSpinnerAlt } from "react-icons/cg";
 import { IoCloudUploadSharp } from "react-icons/io5";
 import Toast from "./shared/Toast";
 import { uploadToCloudinary } from "../services/cloudinary/cloudinary";
+import { pdfToCanvas } from "../services/pdfService";
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-
-const processPdf = async (file) => {
-  const loadingTask = pdfjsLib.getDocument(URL.createObjectURL(file));
-  const pdf = await loadingTask.promise;
-  const page = await pdf.getPage(1);
-  const viewport = page.getViewport({ scale: 2 });
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d");
-  canvas.height = viewport.height;
-  canvas.width = viewport.width;
-  await page.render({ canvasContext: context, viewport }).promise;
-  return canvas;
-};
 
 export default function UploadZone() {
   const [loading, setLoading] = useState(false);
@@ -66,7 +52,7 @@ export default function UploadZone() {
       // Handle PDF vs Image
       if (file.type === "application/pdf") {
         setProgress("Converting PDF page...");
-        sourceElement = await processPdf(file);
+        sourceElement = await pdfToCanvas(file);
       } else {
         sourceElement = new Image();
         sourceElement.src = URL.createObjectURL(file);
@@ -112,7 +98,7 @@ export default function UploadZone() {
       if (!didDetect) {
         setToast({
           show: true,
-          message: "Something went wrong. Please try again.",
+          message: "Document can't be processed. Saving as original!",
           type: "error",
         });
       } else {

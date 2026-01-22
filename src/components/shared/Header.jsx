@@ -55,7 +55,7 @@ export default function Header() {
   };
 
   return (
-    <header className="py-3 mx-auto top-0 z-50 sticky bg-bg-dark shadow-2xl">
+    <header className="py-2 px-4 rounded-lg max-w-7xl mx-auto top-4 z-50 sticky bg-bg-dark shadow-2xl">
       <ConfirmDialog
         isOpen={isLogoutDialogOpen}
         title="Sign Out"

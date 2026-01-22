@@ -19,10 +19,13 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen relative bg-bg-dark font-sans selection:bg-brand-blue/30 px-2 sm:px-4 overflow-hidden">
+    <div className="min-h-screen relative bg-bg-dark font-sans selection:bg-brand-blue/30 px-2 sm:px-4 overflow-hidden container mx-auto">
       <Header />
-  
-      <main className="pt-16 pb-24 text-center">
+      <div className="absolute -top-10 left-0 right-0 w-full z-0 aspect-video">
+        <img src={Banner} alt="hero banner" className="" />
+      </div>
+
+      <main className="pt-16 pb-24 text-center relative z-10">
         <div className="group">
           <h1 className="text-5xl md:text-7xl font-black text-white leading-tight mb-6 italic-none">
             Turn your scans into{" "}
@@ -64,12 +67,10 @@ export default function Home() {
           ].map((feature, i) => (
             <div
               key={i}
-              className={`p-4 sm:p-6 ${i % 2 !== 0 ? "bg-linear-to-t from-brand-blue/10 to-transparent border-transparent" : "border"} rounded-3xl border-brand-blue/30 transition-colors group`}
+              className={`p-4 sm:p-6 ${i % 2 !== 0 ? "bg-linear-to-t from-brand-blue/10 to-bg-dark border-transparent" : "border bg-bg-dark"} rounded-3xl border-brand-blue/30 transition-colors group`}
             >
-              <div className="w-12 h-12 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform ease-in-out duration-500">
+              <h3 className="text-xl flex items-center gap-2 justify-center font-bold text-white mb-2">
                 {feature.icon}
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">
                 {feature.title}
               </h3>
               <p className="text-muted-grey text-sm leading-relaxed">
