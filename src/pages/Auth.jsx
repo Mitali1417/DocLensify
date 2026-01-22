@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { auth } from "../firebase/firebase";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -8,6 +7,8 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../services/firebase/firebase";
+import { IoArrowForward, IoLogoGoogle } from "react-icons/io5";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -32,17 +33,15 @@ export default function Auth() {
           email,
           password,
         );
-        await updateProfile(userCredential.user, {
-          displayName: username,
-        });
-        console.log(`Welcome to the family, ${username}!`);
+        await updateProfile(userCredential.user, { displayName: username });
+        console.log(`Welcome to the family, ${username}! 🎊`);
       }
       nav("/dashboard");
     } catch (err) {
       setError(
         isLogin
           ? "Oops! Credentials don't match."
-          : "Could not create account.",
+          : "Could not create account. Try again!",
       );
     } finally {
       setLoading(false);
@@ -55,106 +54,101 @@ export default function Auth() {
       await signInWithPopup(auth, provider);
       nav("/dashboard");
     } catch (err) {
-      setError("Google sign-in failed.");
+      setError("Google sign-in failed. Please try again!");
     }
   };
 
   return (
-    <div className="auth-card">
-      <h2 className="text-2xl">
-        {isLogin ? "Welcome back" : "Join DocLensify"}
-      </h2>
-      <p className="mb-4">
-        {isLogin ? "Sign in to continue" : "Create your account to get started"}
-      </p>
-
-      <button onClick={loginWithGoogle} className="btn-outline">
-        <img
-          src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-          width="20"
-          alt="G"
-        />
-        Continue with Google
-      </button>
-
-      <div
-        style={{
-          margin: "20px 0",
-          fontSize: "14px",
-          backgroundColor: "var(--border)",
-          height: "1px",
-          width: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <span style={{ backgroundColor: "var(--card)", padding: "0 10px" }}>
-          or
-        </span>
-      </div>
-
-      <form onSubmit={handleAuth}>
-        {!isLogin && (
-          <input
-            placeholder="Username"
-            type="text"
-            required
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        )}
-
-        <input
-          placeholder="Email address"
-          type="email"
-          required
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          placeholder="Password"
-          type="password"
-          required
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        {error && (
-          <p style={{ color: "#d93025", fontSize: "14px", marginTop: "10px" }}>
-            {error}
+    <div className="min-h-[90vh] flex items-center justify-center p-4">
+      <div className="w-full max-w-md bg-card-dark border border-border-dark rounded-lg p-8 md:p-10 shadow-2xl">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-transparent bg-linear-to-t from-muted-grey to-white bg-clip-text mb-2">
+            {isLogin ? "Welcome back" : "Join DocLensify"}
+          </h2>
+          <p className="text-muted-grey text-sm">
+            {isLogin
+              ? "Your document library is waiting"
+              : "Start your journey with us today"}
           </p>
-        )}
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: "24px",
-          }}
-        >
-          <button
-            type="button"
-            onClick={() => setIsLogin(!isLogin)}
-            style={{
-              color: "var(--blue)",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              fontWeight: "500",
-            }}
-          >
-            {isLogin ? "Create account" : "I have an account"}
-          </button>
-
-          <button
-            type="submit"
-            className="btn-primary"
-            style={{ width: "auto" }}
-            disabled={loading}
-          >
-            {loading ? "..." : isLogin ? "Sign in" : "Sign up"}
-          </button>
         </div>
-      </form>
+
+        <button
+          onClick={loginWithGoogle}
+          className="w-full text-sm flex items-center justify-center gap-3 bg-white/5 border border-border-dark hover:bg-white/10 text-white py-2 rounded-lg transition-all duration-300 group shadow-lg"
+        >
+          <IoLogoGoogle className="text-xl group-hover:scale-110 transition-transform" />
+          Continue with Google
+        </button>
+
+        {/* Divider */}
+        <div className="relative my-8 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-border-dark"></div>
+          </div>
+          <span className="relative px-4 bg-card-dark text-xs font-bold text-muted-grey uppercase tracking-widest">
+            or
+          </span>
+        </div>
+
+        <form onSubmit={handleAuth} className="space-y-4">
+          {!isLogin && (
+            <input
+              placeholder="Full Name"
+              type="text"
+              required
+              className="w-full"
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          )}
+
+          <input
+            placeholder="Email address"
+            type="email"
+            required
+            className="w-full"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <input
+            placeholder="Password"
+            type="password"
+            required
+            className="w-full"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          {error && (
+            <p className="text-red-400 text-xs font-medium bg-red-400/10 p-3 rounded-lg border border-red-400/20">
+              {error}
+            </p>
+          )}
+
+          <div className="flex flex-col gap-4 mt-8">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full btn-primary flex items-center justify-center gap-2 transition-all transform active:scale-95"
+            >
+              {loading
+                ? "Magic in progress..."
+                : isLogin
+                  ? "Sign In"
+                  : "Create Account"}
+              <IoArrowForward className="text-lg" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsLogin(!isLogin)}
+              className="text-sm text-muted-grey transition-colors"
+            >
+              {isLogin
+                ? "New here? Create an account"
+                : "Already have an account? Sign in"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -1,12 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase/firebase";
+
 
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
 import PageLoader from "./components/shared/PageLoader";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./services/firebase/firebase";
 
 export default function App() {
   const [user, setUser] = useState(null);

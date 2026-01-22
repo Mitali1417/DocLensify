@@ -21,13 +21,7 @@ export default function Home() {
   return (
     <div className="min-h-screen relative bg-bg-dark font-sans selection:bg-brand-blue/30 px-2 sm:px-4 overflow-hidden">
       <Header />
-      {/* <div className="absolute top-0 left-0 w-full h-[600px] z-0 pointer-events-none overflow-hidden">
-        <img
-          src={Banner}
-          className="w-full h-full object-cover opacity-80 "
-          alt="Background Decoration"
-        />
-      </div> */}
+  
       <main className="pt-16 pb-24 text-center">
         <div className="group">
           <h1 className="text-5xl md:text-7xl font-black text-white leading-tight mb-6 italic-none">
@@ -36,7 +30,7 @@ export default function Home() {
               Magic.
             </span>
           </h1>
-          <p className="max-w-2xl mx-auto text-muted-grey text-lg md:text-xl mb-10 leading-relaxed">
+          <p className="max-w-2xl mx-auto text-muted-grey text-xs sm:text-lg md:text-xl mb-10 leading-relaxed">
             Experience the future of scanning. Our AI detects edges, enhances
             text, and organizes your life in seconds.
           </p>

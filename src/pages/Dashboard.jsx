@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase/firebase";
+
 import Header from "../components/shared/Header";
 import UploadZone from "../components/UploadZone";
 import Gallery from "../components/Gallery";
 import PageLoader from "../components/shared/PageLoader";
 import Hero from "../components/Hero";
 import Footer from "../components/shared/Footer";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../services/firebase/firebase";
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);
@@ -45,7 +46,7 @@ export default function Dashboard() {
           </div>
         )}
       </main>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

@@ -1,14 +1,41 @@
 import { useState, useEffect } from "react";
-import { auth } from "../../firebase/firebase";
-import { signOut } from "firebase/auth";
+
 import { useNavigate, useLocation } from "react-router-dom";
-import { BiChevronDown, BiLogOut, BiGridAlt } from "react-icons/bi";
+import {
+  BiChevronDown,
+  BiLogOut,
+  BiGridAlt,
+  BiLogIn,
+  BiArrowFromLeft,
+} from "react-icons/bi";
+import { signOut } from "firebase/auth";
+import { auth } from "../../services/firebase/firebase";
+import ConfirmDialog from "./ConfirmDialog";
+import { IoArrowForward } from "react-icons/io5";
+import { BsArrowBarUp } from "react-icons/bs";
 
 export default function Header() {
   const nav = useNavigate();
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+
+  const handleLogoutRequest = () => {
+    setShowMenu(false);
+    setIsLogoutDialogOpen(true);
+  };
+
+  const confirmSignOut = async () => {
+    try {
+      await signOut(auth);
+      nav("/");
+    } catch (error) {
+      console.error("Logout Error:", error);
+    } finally {
+      setIsLogoutDialogOpen(false);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
@@ -16,15 +43,6 @@ export default function Header() {
     });
     return () => unsubscribe();
   }, []);
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      nav("/");
-    } catch (error) {
-      console.error("Logout Error:", error);
-    }
-  };
 
   const getInitials = (name) => {
     if (!name) return "U";
@@ -38,6 +56,13 @@ export default function Header() {
 
   return (
     <header className="py-3 mx-auto top-0 z-50 sticky bg-bg-dark shadow-2xl">
+      <ConfirmDialog
+        isOpen={isLogoutDialogOpen}
+        title="Sign Out"
+        message="Are you sure you want to sign out? You will be redirected to the home page."
+        onConfirm={confirmSignOut}
+        onCancel={() => setIsLogoutDialogOpen(false)}
+      />
       <div className="flex justify-between items-center">
         <div
           onClick={() => nav(user ? "/dashboard" : "/")}
@@ -112,7 +137,7 @@ export default function Header() {
                       <div className="h-px bg-border-dark my-1 mx-2" />
 
                       <button
-                        onClick={handleLogout}
+                        onClick={handleLogoutRequest}
                         className="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold text-red-400 transition-all hover:bg-red-500/10"
                       >
                         <BiLogOut className="text-lg" /> Sign out
@@ -128,15 +153,9 @@ export default function Header() {
                 <>
                   <button
                     onClick={() => nav("/auth")}
-                    className="hidden sm:block px-5 py-2 text-sm text-white hover:text-brand-blue transition-colors"
+                    className="btn-outline px-5 py-2 text-sm"
                   >
-                    Log in
-                  </button>
-                  <button
-                    onClick={() => nav("/auth")}
-                    className="btn-primary px-6 py-2.5 rounded-xl! text-xs"
-                  >
-                    Start Scanning
+                    Log in <IoArrowForward />
                   </button>
                 </>
               )}

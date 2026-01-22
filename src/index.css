@@ -17,7 +17,7 @@
   --shadow-gallery: 0 2px 8px rgba(0, 0, 0, 0.1);
   --shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
-html{
+html {
   scroll-behavior: smooth;
 }
 
@@ -46,6 +46,10 @@ html{
   }
 }
 
+input {
+  @apply text-sm font-normal bg-card-light border border-border-dark rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all;
+}
+
 button {
   @apply cursor-pointer select-none;
 }
@@ -69,8 +73,8 @@ button {
   }
 
   .btn-outline {
-    @apply w-full flex items-center justify-center gap-2.5 px-5 py-3 bg-white text-gray-800 
-           border border-gray-200 rounded-lg font-semibold text-sm transition-all
+    @apply w-full flex items-center justify-center gap-2.5 px-5 py-3 bg-white/10 text-gray-800 
+           border border-muted-grey rounded-lg text-sm transition-all
            hover:bg-gray-50 hover:border-gray-300;
   }
 

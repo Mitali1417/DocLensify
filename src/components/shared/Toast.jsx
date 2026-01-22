@@ -11,9 +11,9 @@ const Toast = ({ message, type = 'success', onClose, duration = 3000 }) => {
   }, [onClose, duration]);
 
   const styles = {
-    success: "bg-emerald-500/10 border-emerald-500 text-emerald-400",
-    error: "bg-red-500/10 border-red-500 text-red-400",
-    info: "bg-blue-500/10 border-blue-500 text-blue-400"
+    success: "text-emerald-400",
+    error: "text-red-400",
+    info: "text-blue-400"
   };
 
   const icons = {
@@ -26,7 +26,7 @@ const Toast = ({ message, type = 'success', onClose, duration = 3000 }) => {
     <div className={`
       fixed bottom-5 right-5 flex items-center gap-3 px-4 py-3 
       rounded-xl border shadow-2xl backdrop-blur-md z-50
-      animate-in slide-in-from-right-10 fade-in duration-300
+      animate-in slide-in-from-right-10 fade-in duration-300 bg-bg-dark border-border-dark text-white
       ${styles[type]}
     `}>
       <div className="shrink-0">

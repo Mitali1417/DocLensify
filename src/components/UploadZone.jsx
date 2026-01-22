@@ -135,9 +135,9 @@ export default function UploadZone() {
   };
 
   return (
-    <div className="text-center py-10">
+    <div className="text-center sm:py-10">
       {error && (
-        <div className="bg-red-100 text-red-600 p-3 rounded-lg mb-5 text-sm font-medium animate-in fade-in slide-in-from-top-1">
+        <div className="bg-red-100/10 text-red-600 p-3 rounded-lg mb-5 text-sm font-medium animate-in fade-in slide-in-from-top-1">
           {error}
         </div>
       )}
@@ -145,7 +145,7 @@ export default function UploadZone() {
       <label
         htmlFor="file-input"
         className={`
-        block w-full p-10 rounded-2xl border border-dashed transition-all duration-500
+        block w-full p-10 rounded-lg border border-dashed transition-all duration-500
         ${
           loading
             ? "cursor-not-allowed opacity-60 border-border-dark bg-card-dark"

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { db, auth } from "../firebase/firebase";
 import {
   collection,
   query,
@@ -15,12 +14,16 @@ import {
   IoCheckmarkCircle,
   IoDocumentTextOutline,
 } from "react-icons/io5";
+import { auth, db } from "../services/firebase/firebase";
+import ConfirmDialog from "./shared/ConfirmDialog";
 
 export default function Gallery() {
   const [docs, setDocs] = useState([]);
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   useEffect(() => {
     const unsubscribeAuth = auth.onAuthStateChanged((user) => {
@@ -55,18 +58,23 @@ export default function Gallery() {
     return () => unsubscribeAuth();
   }, []);
 
-  const handleDelete = async (docId, e) => {
+  const openDeleteDialog = (docId, e) => {
     e.stopPropagation();
-    if (
-      window.confirm(
-        "Ready to remove this masterpiece? This cannot be undone! 🚀",
-      )
-    ) {
-      try {
-        await deleteDoc(doc(db, "documents", docId));
-      } catch (error) {
-        console.error("Delete error:", error);
-      }
+    setItemToDelete(docId);
+    setIsDialogOpen(true);
+  };
+
+  // 🚀 Step 2: The actual Firebase deletion
+  const handleConfirmDelete = async () => {
+    if (!itemToDelete) return;
+    try {
+      await deleteDoc(doc(db, "documents", itemToDelete));
+      console.log("Masterpiece removed! 🧹");
+    } catch (error) {
+      console.error("Delete error:", error);
+    } finally {
+      setIsDialogOpen(false);
+      setItemToDelete(null);
     }
   };
 
@@ -122,6 +130,13 @@ export default function Gallery() {
 
   return (
     <div className="py-8">
+      <ConfirmDialog
+        isOpen={isDialogOpen}
+        title="Delete Scan"
+        message="Are you sure you want to remove this scan from your gallery?"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsDialogOpen(false)}
+      />
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h3 className="text-2xl font-bold text-white mb-1">
@@ -195,9 +210,8 @@ export default function Gallery() {
                   {doc.detectionSuccess ? "Scanned" : "Original"}
                 </div>
 
-                {/* Delete Button: Hover Magic! */}
                 <button
-                  onClick={(e) => handleDelete(doc.id, e)}
+                  onClick={(e) => openDeleteDialog(doc.id, e)}
                   className="absolute top-3 left-3 w-10 h-10 rounded-full bg-black/60 text-white border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-red-500 transition-all duration-200"
                 >
                   <IoTrashOutline size={18} />
