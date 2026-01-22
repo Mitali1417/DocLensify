@@ -43,16 +43,16 @@ export default function ViewerModal({ doc, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-5 animate-in fade-in duration-300 backdrop-blur-sm"
+      className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-2 sm:p-5 animate-in fade-in duration-300 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="bg-card-dark rounded-2xl max-w-7xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl border border-border-dark animate-in zoom-in-95 duration-300"
+        className="bg-card-dark rounded-lg max-w-7xl w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl border border-border-dark duration-300"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-6 py-5 border-b border-border-dark flex flex-wrap justify-between items-center gap-4 bg-card-dark">
+        <div className="px-4 sm:px-6 py-5 border-b border-border-dark flex flex-wrap justify-between items-center gap-4 bg-card-dark">
           <div>
-            <h3 className="text-xl font-bold text-white leading-tight">
+            <h3 className="text-sm sm:text-lg md:text-xl text-white leading-tight mb-2">
               {doc.filename || "Untitled Document"}
             </h3>
             <p className="text-xs text-muted-grey font-medium">
@@ -61,7 +61,7 @@ export default function ViewerModal({ doc, onClose }) {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="flex bg-bg-dark p-1 rounded-xl border border-border-dark">
+            <div className="flex bg-bg-dark p-1 rounded-lg border border-border-dark">
               {["comparison", "original", "processed"].map((view) => (
                 <button
                   key={view}
@@ -82,16 +82,16 @@ export default function ViewerModal({ doc, onClose }) {
 
             <button
               onClick={onClose}
-              className="w-10 h-10 flex items-center justify-center rounded-xl bg-bg-dark text-muted-grey hover:bg-red-500/20 hover:text-red-500 border border-border-dark transition-all duration-200"
+              className="w-10 h-10 flex items-center justify-center rounded-lg bg-bg-dark text-muted-grey hover:bg-red-500/20 hover:text-red-500 border border-border-dark transition-all duration-200"
             >
-              <IoClose size={24} />
+              <IoClose size={20} />
             </button>
           </div>
         </div>
 
         <div className="flex-1 overflow-auto bg-bg-dark relative custom-scrollbar">
           <div
-            className={`flex h-full min-h-[500px] ${activeView !== "comparison" ? "flex-col" : "flex-row"}`}
+            className={`flex h-full sm:min-h-[500px] ${activeView !== "comparison" ? "flex-col" : "flex-col sm:flex-row"}`}
           >
             {/* Original Pane */}
             {(activeView === "comparison" || activeView === "original") && (
@@ -111,7 +111,7 @@ export default function ViewerModal({ doc, onClose }) {
             )}
 
             {activeView === "comparison" && (
-              <div className="w-px bg-linear-to-b from-transparent via-border-dark to-transparent my-10" />
+              <div className="w-px bg-linear-to-b from-transparent via-border-dark to-transparent sm:my-10" />
             )}
 
             {/* Processed Pane */}

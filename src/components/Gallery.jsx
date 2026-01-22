@@ -170,12 +170,12 @@ export default function Gallery() {
 
       {filteredDocs.length === 0 ? (
         <div className="text-center py-24 bg-card-dark rounded-3xl border-2 border-dashed border-border-dark animate-in fade-in zoom-in duration-300">
-          <h4 className="text-xl font-bold text-white mb-2">
+          <h4 className="text-xl text-white/70 mb-2">
             {filter === "all"
-              ? "A clean slate! Ready to scan? 🚀"
+              ? "A clean slate! Ready to scan?"
               : "No documents match this filter."}
           </h4>
-          <p className="text-muted-grey">
+          <p className="text-muted-grey text-sm">
             Upload your first document to begin your journey!
           </p>
         </div>
