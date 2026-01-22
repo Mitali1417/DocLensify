@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { auth } from "../firebase/firebase";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import { BiChevronDown, BiLogOut } from "react-icons/bi";
 
 export default function Header() {
   const nav = useNavigate();
@@ -36,33 +37,17 @@ export default function Header() {
   };
 
   return (
-    <header className="border-b border- p-4 top-0 z-50 sticky bg-background">
-      <div
-        style={{
-          maxWidth: "1400px",
-          margin: "0 auto",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+    <header className="border-b border-border-dark p-2 top-0 z-50 sticky bg-bg-dark">
+      <div className="flex justify-between items-center">
         {/* Logo */}
         <div
           onClick={() => nav("/dashboard")}
-          style={{
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            transition: "opacity 0.2s",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
-          onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+          className="flex items-center gap-2 cursor-pointer"
         >
           <img
             src="/logo.png"
             alt="logo"
-            style={{ height: "34px", width: "34px" }}
+            className="w-12 h-12 object-cover rounded-full"
           />
         </div>
 
@@ -71,75 +56,20 @@ export default function Header() {
           <div style={{ position: "relative" }}>
             <div
               onClick={() => setShowMenu(!showMenu)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-                cursor: "pointer",
-                padding: "8px 12px",
-                borderRadius: "10px",
-                transition: "background 0.2s",
-                background: showMenu ? "var(--card)" : "transparent",
-              }}
-              onMouseEnter={(e) =>
-                !showMenu && (e.currentTarget.style.background = "var(--card)")
-              }
-              onMouseLeave={(e) =>
-                !showMenu && (e.currentTarget.style.background = "transparent")
-              }
+              className="flex items-center gap-4 cursor-pointer hover:bg-card-dark py-2 px-4 rounded-lg"
             >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-end",
-                  marginRight: "4px",
-                }}
-              >
-                <h6
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "500",
-                  }}
-                >
-                  {user.displayName || "User"}
-                </h6>
-                <span
-                  style={{
-                    fontSize: "12px",
-                  }}
-                >
-                  {user.email}
-                </span>
+              <div className="flex flex-col items-end mr-2">
+                <h6 className="font-semibold">{user.displayName || "User"}</h6>
+                <span className="text-sm">{user.email}</span>
               </div>
 
               {/* Avatar */}
-              <div
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  background:
-                    "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "white",
-                  fontWeight: "600",
-                  fontSize: "14px",
-                  boxShadow: "0 2px 8px rgba(102, 126, 234, 0.4)",
-                }}
-              >
+              <div className="w-10 h-10 rounded-full overflow-hidden bg-amber-700 flex items-center justify-center text-white font-semibold text-sm">
                 {user.photoURL ? (
                   <img
                     src={user.photoURL}
                     alt="Avatar"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
+                    className="w-full h-full object-cover"
                   />
                 ) : (
                   getInitials(user.displayName || user.email)
@@ -147,24 +77,10 @@ export default function Header() {
               </div>
 
               {/* Dropdown Arrow */}
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                style={{
-                  transition: "transform 0.2s",
-                  transform: showMenu ? "rotate(180deg)" : "rotate(0deg)",
-                }}
-              >
-                <path
-                  d="M4 6L8 10L12 6"
-                  stroke="#6b7280"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+
+              <div className={`${showMenu ? "rotate-180" : "rotate-0"}`}>
+                <BiChevronDown />
+              </div>
             </div>
 
             {/* Dropdown Menu */}
@@ -173,102 +89,33 @@ export default function Header() {
                 {/* Backdrop */}
                 <div
                   onClick={() => setShowMenu(false)}
-                  style={{
-                    position: "fixed",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    zIndex: 10,
-                  }}
+                  className="fixed inset-0 z-10"
                 />
 
                 {/* Menu */}
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "calc(100% + 8px)",
-                    right: 0,
-                    background: "var(--card)",
-                    borderColor: "var(--border)",
-                    borderRadius: "10px",
-                    boxShadow:
-                      "0 10px 25px rgba(0,0,0,0.1), 0 0 1px rgba(0,0,0,0.1)",
-                    minWidth: "220px",
-                    overflow: "hidden",
-                    zIndex: 20,
-                  }}
-                >
-                  <div style={{ padding: "8px" }}>
+                <div className="absolute top-[calc(100% + 8px)] right-0 z-20 bg-card-dark border border-border-dark rounded-lg shadow-md max-w-44 w-full">
+                  <div className="text-sm p-2">
                     <button
                       onClick={() => {
                         setShowMenu(false);
                         nav("/dashboard");
                       }}
-                      style={{
-                        width: "100%",
-                        padding: "10px 12px",
-                        background: "transparent",
-                        border: "none",
-                        borderRadius: "6px",
-                        cursor: "pointer",
-                        fontSize: "14px",
-                        fontWeight: "500",
-                        color: "white",
-                        textAlign: "left",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                        transition: "background 0.2s",
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.target.style.background = "var(--border)")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.target.style.background = "transparent")
-                      }
+                      className="w-full text-left rounded-lg px-2.5 py-2 text-white transition-all hover:bg-border-dark"
                     >
                       Dashboard
                     </button>
 
-                    <div
-                      style={{
-                        height: "1px",
-                        background: "var(--border)",
-                        margin: "8px 0",
-                      }}
-                    />
+                    <div className="h-px bg-border-dark my-2" />
 
                     <button
                       onClick={() => {
                         setShowMenu(false);
                         handleLogout();
                       }}
-                      style={{
-                        width: "100%",
-                        padding: "10px 12px",
-                        background: "transparent",
-                        border: "none",
-                        borderRadius: "6px",
-                        cursor: "pointer",
-                        fontSize: "14px",
-                        fontWeight: "500",
-                        color: "#dc2626",
-                        textAlign: "left",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "10px",
-                        transition: "background 0.2s",
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.target.style.background = "#ff000012")
-                      }
-                      onMouseLeave={(e) =>
-                        (e.target.style.background = "transparent")
-                      }
+                      className="w-full  text-left rounded-lg px-2.5 py-2 text-red-600 transition-all hover:bg-red-600/20"
                     >
-                      {" "}
-                      Sign Out
+                      Sign out
+                      <BiLogOut className="inline-block ml-2" />
                     </button>
                   </div>
                 </div>

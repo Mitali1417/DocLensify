@@ -4,6 +4,9 @@ import { collection, addDoc } from "firebase/firestore";
 import { processDocument } from "../utils/cvUtils";
 import axios from "axios";
 import * as pdfjsLib from "pdfjs-dist";
+import { CgSpinner, CgSpinnerAlt } from "react-icons/cg";
+import { IoCloudUploadSharp } from "react-icons/io5";
+import Toast from "./shared/Toast";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
@@ -24,6 +27,11 @@ export default function UploadZone() {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState("");
   const [error, setError] = useState("");
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
 
   const uploadToCloudinary = async (fileBlob, isOriginal = false) => {
     setProgress(
@@ -116,12 +124,18 @@ export default function UploadZone() {
 
       setProgress("");
 
-      if (didDetect) {
-        alert("Document scanned successfully!");
+      if (!didDetect) {
+        setToast({
+          show: true,
+          message: "Something went wrong. Please try again.",
+          type: "error",
+        });
       } else {
-        alert(
-          "Could not detect document edges. Saved original image instead. Try:\n• Better lighting\n• Clearer background\n• Flatter document",
-        );
+        setToast({
+          show: true,
+          message: "Document successfully processed!",
+          type: "success",
+        });
       }
 
       // Reset file input
@@ -136,36 +150,23 @@ export default function UploadZone() {
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "40px" }}>
-      <h2 style={{ fontWeight: "400", marginBottom: "20px" }}></h2>
-
+    <div className="text-center p-10">
       {error && (
-        <div
-          style={{
-            background: "#fee",
-            color: "#c33",
-            padding: "12px",
-            borderRadius: "8px",
-            marginBottom: "20px",
-            fontSize: "14px",
-          }}
-        >
+        <div className="bg-red-100 text-red-600 p-3 rounded-lg mb-5 text-sm font-medium animate-in fade-in slide-in-from-top-1">
           {error}
         </div>
       )}
 
       <label
         htmlFor="file-input"
-        style={{
-          cursor: loading ? "not-allowed" : "pointer",
-          padding: "30px",
-          border: "2px dashed var(--card)",
-          backgroundColor: "var(--border)",
-          borderRadius: "12px",
-          display: "block",
-          transition: "all 0.2s",
-          opacity: loading ? 0.6 : 1,
-        }}
+        className={`
+        block w-full p-10 rounded-2xl border border-dashed transition-all duration-500
+        ${
+          loading
+            ? "cursor-not-allowed opacity-60 border-border-dark bg-card-dark"
+            : "cursor-pointer border-border-dark hover:border-blue-500 hover:bg-card-dark/50 bg-card-dark/60"
+        }
+      `}
       >
         <input
           id="file-input"
@@ -173,55 +174,39 @@ export default function UploadZone() {
           accept="image/jpeg,image/jpg,image/png,application/pdf"
           onChange={handleFile}
           disabled={loading}
-          style={{ display: "none" }}
+          className="hidden"
         />
 
-        <div style={{ fontSize: "48px", marginBottom: "10px" }}>
-          {loading ? "⏳" : "📁"}
+        <div
+          className={`text-5xl mb-3 flex justify-center ${loading ? "animate-spin text-blue-400" : "text-blue-500"}`}
+        >
+          {loading ? (
+            <CgSpinnerAlt className="animate-spin size-12" />
+          ) : (
+            <IoCloudUploadSharp />
+          )}
         </div>
 
-        <h5 style={{ fontSize: "16px", fontWeight: "600" }}>
-          {loading ? progress || "Processing..." : "Click to Upload Document"}
+        <h5
+          className={`text-base font-semibold ${loading ? "text-amber-300 animate-pulse" : "text-white"}`}
+        >
+          {loading
+            ? progress || "Processing Document"
+            : "Click to Upload Document"}
         </h5>
 
-        <div style={{ fontSize: "12px", marginTop: "8px" }}>
-          Supports PNG, JPEG, and PDF files
+        <div className="text-xs mt-2 text-muted-grey">
+          Supports high-quality PNG, JPEG, and PDF files
         </div>
       </label>
 
-      {loading && (
-        <div
-          style={{
-            marginTop: "20px",
-            padding: "15px",
-            background: "#f0f9ff",
-            borderRadius: "8px",
-            fontSize: "14px",
-            color: "#0369a1",
-          }}
-        >
-          <div
-            className="loading-spinner"
-            style={{
-              display: "inline-block",
-              width: "16px",
-              height: "16px",
-              border: "2px solid #0369a1",
-              borderTopColor: "transparent",
-              borderRadius: "50%",
-              animation: "spin 0.6s linear infinite",
-              marginRight: "8px",
-            }}
-          />
-          {progress}
-        </div>
+      {toast.show && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast({ ...toast, show: false })}
+        />
       )}
-
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 }

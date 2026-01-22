@@ -4,6 +4,7 @@
   --color-brand-blue: #1a73e8;
   --color-bg-dark: #131314;
   --color-foreground: #ffffff;
+  --color-card-light: #303134 ;
   --color-card-dark: #1e1f20;
   --color-muted-grey: #787c81;
   --color-border-dark: #303134;
@@ -38,6 +39,10 @@
   p {
     @apply text-muted-grey font-medium;
   }
+}
+
+button {
+  @apply cursor-pointer select-none;
 }
 
 @layer components {
