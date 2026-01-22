@@ -205,7 +205,7 @@ export default function Gallery() {
               </div>
 
               {/* Document Info */}
-              <div className="p-4 bg-gradient-to-b from-card-dark to-bg-dark">
+              <div className="p-4 bg-linear-to-b from-card-dark to-bg-dark">
                 <p className="text-white font-bold text-sm truncate mb-1 group-hover:text-blue-400 transition-colors">
                   {doc.filename || "Untitled Masterpiece"}
                 </p>

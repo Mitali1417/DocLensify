@@ -150,7 +150,7 @@ export default function UploadZone() {
   };
 
   return (
-    <div className="text-center p-10">
+    <div className="text-center py-10">
       {error && (
         <div className="bg-red-100 text-red-600 p-3 rounded-lg mb-5 text-sm font-medium animate-in fade-in slide-in-from-top-1">
           {error}

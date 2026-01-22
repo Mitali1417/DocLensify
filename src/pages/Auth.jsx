@@ -60,11 +60,11 @@ export default function Auth() {
   };
 
   return (
-    <div className="auth-card  container mx-auto">
-      <h2 style={{ marginBottom: "4px", fontWeight: "400" }}>
+    <div className="auth-card">
+      <h2 className="text-2xl">
         {isLogin ? "Welcome back" : "Join DocLensify"}
       </h2>
-      <p style={{ marginBottom: "32px" }}>
+      <p className="mb-4">
         {isLogin ? "Sign in to continue" : "Create your account to get started"}
       </p>
 

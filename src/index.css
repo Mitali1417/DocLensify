@@ -17,6 +17,9 @@
   --shadow-gallery: 0 2px 8px rgba(0, 0, 0, 0.1);
   --shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
+html{
+  scroll-behavior: smooth;
+}
 
 @layer base {
   * {
@@ -59,10 +62,9 @@ button {
            focus:border-blue-500 focus:ring-3 focus:ring-blue-500/10;
   }
 
-  /* --- BUTTONS: Powering Action! --- */
   .btn-primary {
-    @apply px-6 py-2.5 bg-blue-500 text-white rounded-lg font-semibold text-sm transition-all
-           hover:bg-blue-600 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-500/30
+    @apply px-6 py-2.5 bg-blue-500 text-white rounded-lg font-semibold text-sm transition-all ease-in-out duration-500
+           hover:bg-blue-600 hover:-translate-y-0.5
            active:translate-y-0 disabled:bg-gray-500 disabled:cursor-not-allowed;
   }
 
