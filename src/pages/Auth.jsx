@@ -60,7 +60,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="auth-card">
+    <div className="auth-card  container mx-auto">
       <h2 style={{ marginBottom: "4px", fontWeight: "400" }}>
         {isLogin ? "Welcome back" : "Join DocLensify"}
       </h2>

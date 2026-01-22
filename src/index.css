@@ -1,14 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap");
 @import "tailwindcss";
 
 @theme {
   --color-brand-blue: #1a73e8;
   --color-bg-dark: #131314;
   --color-foreground: #ffffff;
-  --color-card-light: #303134 ;
+  --color-card-light: #303134;
   --color-card-dark: #1e1f20;
   --color-muted-grey: #787c81;
   --color-border-dark: #303134;
   --color-input-dark: #202124;
+
+  --font-sans: "Google Sans", "Red Hat Display", sans-serif;
 
   --shadow-auth: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 20px rgba(0, 0, 0, 0.05);
   --shadow-gallery: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -21,8 +24,7 @@
   }
 
   body {
-    @apply bg-bg-dark text-white font-sans antialiased selection:bg-brand-blue/30;
-    font-family: "Roboto", sans-serif;
+    @apply bg-bg-dark text-white font-sans selection:bg-brand-blue/30;
   }
 
   h1,
@@ -145,5 +147,11 @@ button {
   .close-btn,
   button {
     @apply hidden;
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
   }
 }
