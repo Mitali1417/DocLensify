@@ -36,16 +36,7 @@ export default function Header() {
   };
 
   return (
-    <header
-      style={{
-        borderBottom: "1px solid #e5e7eb3c",
-        padding: "16px 24px",
-        position: "sticky",
-        top: 0,
-        zIndex: 100,
-        boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
-      }}
-    >
+    <header className="border-b border- p-4 top-0 z-50 sticky bg-background">
       <div
         style={{
           maxWidth: "1400px",
@@ -73,7 +64,6 @@ export default function Header() {
             alt="logo"
             style={{ height: "34px", width: "34px" }}
           />
-         
         </div>
 
         {/* User Section */}
