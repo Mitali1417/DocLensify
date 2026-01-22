@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../services/firebase/firebase";
 import { IoArrowForward, IoLogoGoogle } from "react-icons/io5";
 import { CgSpinner } from "react-icons/cg";
+import Banner from "../assets/home-banner.svg";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -60,8 +61,10 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-[90vh] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-card-dark border border-border-dark rounded-lg p-8 md:p-10 shadow-2xl">
+    <div className="min-h-[95vh] relative flex items-center justify-center p-4">
+      <div className="w-full relative max-w-md bg-card-dark border border-border-dark rounded-lg p-8 md:p-10 shadow-2xl overflow-hidden">
+       <div className="relative z-10">
+
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-transparent bg-linear-to-t from-muted-grey to-white bg-clip-text mb-2">
             {isLogin ? "Welcome back" : "Join DocLensify"}
@@ -75,7 +78,7 @@ export default function Auth() {
 
         <button
           onClick={loginWithGoogle}
-          className="w-full text-sm flex items-center justify-center gap-3 bg-white/5 border border-border-dark hover:bg-white/10 text-white py-2 rounded-lg transition-all duration-300 group shadow-lg"
+          className="w-full text-sm flex items-center justify-center gap-3 bg-bg-dark border border-border-dark hover:bg-white/10 text-white py-2 rounded-lg transition-all duration-300 group shadow-lg"
         >
           <IoLogoGoogle className="text-xl group-hover:scale-110 transition-transform" />
           Continue with Google
@@ -149,7 +152,21 @@ export default function Auth() {
             </button>
           </div>
         </form>
+     
+       </div>
+
+
+
+       <div className="absolute top-0 left- right-0 w-[200%] z-0 aspect-video rotate-45 opacity-40">
+              <img src={Banner} alt="hero banner" />
+            </div>
+         <div className="absolute top-0 left- -right-20 w-[200%] z-0 aspect-video rotate-180 opacity-30">
+              <img src={Banner} alt="hero banner" />
+            </div>
+      
       </div>
+
+       
     </div>
   );
 }

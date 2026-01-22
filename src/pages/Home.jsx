@@ -22,7 +22,7 @@ export default function Home() {
     <div className="min-h-screen relative bg-bg-dark font-sans selection:bg-brand-blue/30 px-2 sm:px-4 overflow-hidden container mx-auto">
       <Header />
       <div className="absolute -top-10 left-0 right-0 w-full z-0 aspect-video">
-        <img src={Banner} alt="hero banner" className="" />
+        <img src={Banner} alt="hero banner" />
       </div>
 
       <main className="pt-16 pb-24 text-center relative z-10">
