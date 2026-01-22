@@ -9,6 +9,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { auth } from "../services/firebase/firebase";
 import { IoArrowForward, IoLogoGoogle } from "react-icons/io5";
+import { CgSpinner } from "react-icons/cg";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -130,7 +131,7 @@ export default function Auth() {
               className="w-full btn-primary flex items-center justify-center gap-2 transition-all transform active:scale-95"
             >
               {loading
-                ? "Magic in progress..."
+                ? <CgSpinner className="animate-spin" />
                 : isLogin
                   ? "Sign In"
                   : "Create Account"}

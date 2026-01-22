@@ -131,7 +131,7 @@ export default function UploadZone() {
       <label
         htmlFor="file-input"
         className={`
-        block w-full p-10 rounded-lg border border-dashed transition-all duration-500
+        block w-full p-10 rounded-lg border border-dashed max-w-7xl mx-auto transition-all duration-500
         ${
           loading
             ? "cursor-not-allowed opacity-60 border-border-dark bg-card-dark"
