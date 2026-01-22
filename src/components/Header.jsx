@@ -68,25 +68,12 @@ export default function Header() {
           onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.7")}
           onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
         >
-          <div>
-            <h6
-              style={{
-                fontSize: "18px",
-                fontWeight: "800",
-                lineHeight: "1.2",
-              }}
-            >
-              DocLensify
-            </h6>
-            <p
-              style={{
-                fontSize: "12px",
-                letterSpacing: "0.5px",
-              }}
-            >
-              Document Scanner
-            </p>
-          </div>
+          <img
+            src="/logo.png"
+            alt="logo"
+            style={{ height: "34px", width: "34px" }}
+          />
+         
         </div>
 
         {/* User Section */}
