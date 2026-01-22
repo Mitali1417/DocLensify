@@ -9,6 +9,7 @@ import {
 } from "react-icons/io5";
 import Header from "../components/shared/Header";
 import Footer from "../components/shared/Footer";
+import Banner from "../assets/home-banner.svg";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -18,9 +19,15 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-bg-dark font-sans selection:bg-brand-blue/30 px-2 sm:px-4">
+    <div className="min-h-screen relative bg-bg-dark font-sans selection:bg-brand-blue/30 px-2 sm:px-4 overflow-hidden">
       <Header />
-
+      {/* <div className="absolute top-0 left-0 w-full h-[600px] z-0 pointer-events-none overflow-hidden">
+        <img
+          src={Banner}
+          className="w-full h-full object-cover opacity-80 "
+          alt="Background Decoration"
+        />
+      </div> */}
       <main className="pt-16 pb-24 text-center">
         <div className="group">
           <h1 className="text-5xl md:text-7xl font-black text-white leading-tight mb-6 italic-none">

@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { db, auth } from "../firebase/firebase";
+import { db, auth } from "../services/firebase/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { processDocument } from "../utils/cvUtils";
-import axios from "axios";
 import * as pdfjsLib from "pdfjs-dist";
 import { CgSpinner, CgSpinnerAlt } from "react-icons/cg";
 import { IoCloudUploadSharp } from "react-icons/io5";
 import Toast from "./shared/Toast";
+import { uploadToCloudinary } from "../services/cloudinary/cloudinary";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
@@ -32,26 +32,6 @@ export default function UploadZone() {
     message: "",
     type: "success",
   });
-
-  const uploadToCloudinary = async (fileBlob, isOriginal = false) => {
-    setProgress(
-      isOriginal ? "Uploading original..." : "Uploading processed...",
-    );
-
-    const formData = new FormData();
-    formData.append("file", fileBlob);
-    formData.append(
-      "upload_preset",
-      import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
-    );
-    formData.append("cloud_name", import.meta.env.VITE_CLOUDINARY_CLOUD_NAME);
-
-    const res = await axios.post(
-      `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
-      formData,
-    );
-    return res.data.secure_url;
-  };
 
   const handleFile = async (e) => {
     const file = e.target.files[0];
@@ -103,11 +83,16 @@ export default function UploadZone() {
         await processDocument(sourceElement);
 
       // Upload both versions
-      setProgress("Uploading files...");
-      const [origUrl, procUrl] = await Promise.all([
-        uploadToCloudinary(file, true),
-        uploadToCloudinary(processedBlob, false),
-      ]);
+      setProgress("Uploading original...");
+      const originalUpload = await uploadToCloudinary(file, {
+        isOriginal: true,
+      });
+
+      setProgress("Uploading processed...");
+      const processedUpload = await uploadToCloudinary(processedBlob);
+
+      const origUrl = originalUpload.secure_url;
+      const procUrl = processedUpload.secure_url;
 
       // Save to Firestore
       setProgress("Saving to gallery...");
