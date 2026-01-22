@@ -34,7 +34,7 @@ export default function Footer() {
             </p>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             <a
               href="https://github.com/Mitali1417"
               target="_blank"

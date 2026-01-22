@@ -47,7 +47,7 @@ export default function Home() {
           </button>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mt-32">
+        <div className="grid md:grid-cols-3 gap-8 mt-20 md:mt-32">
           {[
             {
               icon: <IoTimerOutline className="text-amber-400" />,
@@ -67,13 +67,13 @@ export default function Home() {
           ].map((feature, i) => (
             <div
               key={i}
-              className={`p-4 sm:p-6 ${i % 2 !== 0 ? "bg-linear-to-t from-brand-blue/10 to-bg-dark border-transparent" : "border bg-bg-dark"} rounded-3xl border-brand-blue/30 transition-colors group`}
+              className={`p-4 sm:p-6 ${i % 2 !== 0 ? "bg-linear-to-t from-brand-blue/10 to-bg-dark border-card-light/10 border md:border-transparent" : "border bg-bg-dark"} rounded-lg border-brand-blue/30 transition-colors group`}
             >
               <h3 className="text-xl flex items-center gap-2 justify-center font-bold text-white mb-2">
                 {feature.icon}
                 {feature.title}
               </h3>
-              <p className="text-muted-grey text-sm leading-relaxed">
+              <p className="text-muted-grey text-xs md:text-sm leading-relaxed">
                 {feature.desc}
               </p>
             </div>
