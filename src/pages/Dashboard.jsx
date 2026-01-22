@@ -24,7 +24,7 @@ export default function Dashboard() {
   if (loading) return <PageLoader />;
 
   return (
-    <div className="dashboard-layout bg-bg-dark min-h-screen container mx-auto px-2 sm:px-4">
+    <div className="dashboard-layout bg-bg-dark min-h-screen container mx-auto mt-2 sm:mt-6 px-2 sm:px-4">
       <Header />
       <main className="mt-4">
         <Hero user={user} />
